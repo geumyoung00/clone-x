@@ -2,9 +2,9 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Layout from './components/layout';
 import Home from './routes/Home';
 import Profile from './routes/Profile';
-import CreateAcount from './routes/CreateAcount';
+import CreateAccount from './routes/CreateAccount';
 import SingIn from './routes/SignIn';
-import { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
 import { useEffect, useState } from 'react';
 import LoadingScreen from './components/loadingScreen/LoadingScreen';
@@ -26,11 +26,11 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: '/create-acount',
-    element: <CreateAcount />,
+    path: '/signup',
+    element: <CreateAccount />,
   },
   {
-    path: '/sign-in',
+    path: '/signin',
     element: <SingIn />,
   },
 ]);
@@ -48,12 +48,17 @@ body{
 }
 `;
 
+const Wrapper = styled.div`
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+`;
+
 function App() {
   /**
    * Firebase Authentication 사용을 위한 로직
    * : user token, cookies등 user정보를 받아오는 동안 로딩 화면을 보여줄 것.
-   
-  */
+   */
 
   const [isLoading, setIsLoading] = useState<Boolean>(true);
   const init = async () => {
@@ -68,10 +73,10 @@ function App() {
   }, []);
 
   return (
-    <>
+    <Wrapper>
       <GlobalStyles />
       {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
-    </>
+    </Wrapper>
   );
 }
 
