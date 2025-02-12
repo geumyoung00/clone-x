@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { styled } from 'styled-components';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { auth } from '../firebase';
+import { useNavigate } from 'react-router-dom';
 
 const Wrapper = styled.div`
   height: 100%;
@@ -54,6 +57,7 @@ export default function CreateAccount() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name } = e.target;
@@ -68,14 +72,23 @@ export default function CreateAccount() {
     }
   };
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isLoading || name === '' || email === '' || password === '') return;
     try {
       setIsLoading(true);
       //create an account.
+      const credentials = await createUserWithEmailAndPassword(auth, email, password);
+
       // set the name of the user.
+      await updateProfile(credentials.user, {
+        displayName: name,
+      });
+
       // redirect to the home page.
+      navigate('/', { replace: true });
     } catch (error) {
+      console.error(error);
       //setError();
     } finally {
       setIsLoading(false);
@@ -84,10 +97,10 @@ export default function CreateAccount() {
 
   return (
     <Wrapper>
-      <Title>Log into 🧡</Title>
+      <Title>🧡Join🧡</Title>
       <Form onSubmit={onSubmit}>
-        <Input name='name' value={name} placeholder='Name' type='text' onChange={onChange} />
-        <Input name='email' value={email} placeholder='Email' type='text' onChange={onChange} />
+        <Input name='name' value={name} placeholder='Name' type='text' onChange={onChange} autoComplete='username' />
+        <Input name='email' value={email} placeholder='Email' type='text' onChange={onChange} autoComplete='email' />
         <Input
           name='password'
           value={password}
