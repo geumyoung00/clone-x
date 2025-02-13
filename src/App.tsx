@@ -9,6 +9,7 @@ import reset from 'styled-reset';
 import { useEffect, useState } from 'react';
 import LoadingScreen from './components/loadingScreen/LoadingScreen';
 import ProtectedRoute from './components/protected-route';
+import ChangePassword from './routes/ChangePassword';
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
   {
     path: '/signin',
     element: <SingIn />,
+  },
+  {
+    path: '/resetpw',
+    element: <ChangePassword />,
   },
 ]);
 
