@@ -3,32 +3,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { auth, db, storage } from '../firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
-const TextArea = styled.textarea`
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
-    'Helvetica Neue', sans-serif;
-  border: 2px solid white;
-  padding: 20px;
-  border-radius: 20px;
-  font-size: 16px;
-  color: white;
-  background-color: black;
-  width: 100%;
-  resize: none;
-  &::placeholder {
-    font-size: 16px;
-  }
-  &:focus {
-    outline: none;
-    border-color: #1d9bf0;
-  }
-`;
+import { Form, TextArea } from './tweet-form-components';
 
 const AttachFileButton = styled.label`
   cursor: pointer;
@@ -70,17 +45,14 @@ export default function PostTweetForm() {
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
-    if (files && files.length === 1) {
-      setFile(files[0]);
-    }
+    // 파일의 크기가 100mb가 넘지 않도로 제한
+    if (files && files.length === 1 && files[0].size < 1 * 1024 * 1024) setFile(files[0]);
   };
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const user = auth.currentUser;
-
     if (!user || isLoading || tweet === '' || tweet.length > 180) return;
-
     try {
       setIsLoading(true);
       const doc = await addDoc(

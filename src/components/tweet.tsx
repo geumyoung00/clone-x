@@ -1,56 +1,28 @@
-import styled from 'styled-components';
 import { InterfaceTweet } from './timeline';
 import { auth, db, storage } from '../firebase';
-import { deleteDoc, doc } from 'firebase/firestore';
+import { deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
+import { useState } from 'react';
+import {
+  BtnWrapper,
+  Column,
+  DeleteButton,
+  EditButton,
+  Payload,
+  Photo,
+  Username,
+  Wrapper,
+} from './tweet-form-components';
+import EditTweetForm from './edit-tweet-form';
 
-const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: 3fr 100px;
-  padding: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 15px;
-`;
+export default function Tweet({ userName, photo, tweet, userId, id, createAt }: InterfaceTweet) {
+  const [isEdit, setIsEdit] = useState<boolean>(false);
 
-const Column = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Photo = styled.img`
-  width: 100px;
-  height: 100px;
-  border-radius: 15px;
-`;
-
-const Username = styled.span`
-  font-weight: 600;
-  font-size: 15px;
-`;
-
-const Payload = styled.p`
-  margin: 10px 0;
-  font-size: 18px;
-`;
-
-const DeleteButton = styled.button`
-  background-color: tomato;
-  color: white;
-  font-weight: 600;
-  border: 0;
-  font-size: 12px;
-  padding: 5px 10px;
-  margin: auto 0 0;
-  text-transform: uppercase;
-  border-radius: 5px;
-  cursor: pointer;
-  width: fit-content;
-`;
-
-export default function Tweet({ userName, photo, tweet, userId, id }: InterfaceTweet) {
+  const props = { userName, photo, tweet, userId, id, createAt };
   const user = auth.currentUser;
+
   const onDelete = async () => {
-    const ok = confirm(`Are you sure you want to DELETE this tweet?`);
+    const ok = confirm(`Are you sure want to DELETE this tweet?`);
     if (!ok || user?.uid !== userId) return;
 
     try {
@@ -63,19 +35,32 @@ export default function Tweet({ userName, photo, tweet, userId, id }: InterfaceT
       }
     } catch (e) {
       console.log(e);
-    } finally {
     }
   };
 
+  const handleEdit = () => setIsEdit((prev) => !prev);
+
   return (
     <Wrapper>
-      <Column>
-        <Username>{userName}</Username>
-        <Payload>{tweet}</Payload>
-
-        {user?.uid === userId ? <DeleteButton onClick={onDelete}>Delete</DeleteButton> : null}
-      </Column>
-      <Column>{photo ? <Photo src={photo} /> : null}</Column>
+      {!isEdit ? (
+        <>
+          <Column>
+            <Username>{userName}</Username>
+            <Payload>{tweet}</Payload>
+            {user?.uid === userId ? (
+              <BtnWrapper>
+                <DeleteButton onClick={onDelete}>Delete</DeleteButton>
+                <EditButton onClick={handleEdit}>Edit</EditButton>
+              </BtnWrapper>
+            ) : null}
+          </Column>
+          <Column>{photo ? <Photo src={photo} /> : null}</Column>
+        </>
+      ) : (
+        <>
+          <EditTweetForm setIsEdit={handleEdit} {...props} />
+        </>
+      )}
     </Wrapper>
   );
 }

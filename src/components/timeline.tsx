@@ -17,6 +17,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  overflow-y: auto;
 `;
 
 export default function Timeline() {
@@ -29,8 +30,8 @@ export default function Timeline() {
       const tweetsQuery = query(
         //collection 호출
         collection(db, 'tweets'),
-        // 최신순 정렬
-        orderBy('createAt'),
+        // 등록일 기준으로 최신순 정렬
+        orderBy('createAt', 'desc'),
         limit(25)
       );
 
@@ -41,7 +42,7 @@ export default function Timeline() {
       //   return {tweet, createAt, userId,  userName, photo, id: doc.id, };
       // });
 
-      unsubscribe = await onSnapshot(tweetsQuery, (snapshot) => {
+      unsubscribe = onSnapshot(tweetsQuery, (snapshot) => {
         const tweets = snapshot.docs.map((doc) => {
           const { tweet, createAt, userId, userName, photo } = doc.data();
           return {
