@@ -7,7 +7,7 @@ import SingIn from './routes/SignIn';
 import styled, { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
 import { useEffect, useState } from 'react';
-import LoadingScreen from './components/loadingScreen/LoadingScreen';
+import LoadingScreen from './components/LoadingScreen';
 import ProtectedRoute from './components/protected-route';
 import ChangePassword from './routes/ChangePassword';
 

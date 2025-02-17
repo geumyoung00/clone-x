@@ -97,7 +97,7 @@ export default function PostTweetForm() {
 
       if (file) {
         // 업로드 file의 저장위치 지정
-        const locationRef = ref(storage, `tweets/${user.uid}-${user.displayName}/${doc.id}`);
+        const locationRef = ref(storage, `tweets/${user.uid}/${doc.id}`);
         const result = await uploadBytes(locationRef, file);
         const url = await getDownloadURL(result.ref);
         await updateDoc(doc, { photo: url });
@@ -114,14 +114,7 @@ export default function PostTweetForm() {
 
   return (
     <Form onSubmit={onSubmit}>
-      <TextArea
-        rows={5}
-        max-length={180}
-        value={tweet}
-        placeholder='What is happening?!'
-        onChange={onChange}
-        required
-      />
+      <TextArea rows={5} maxLength={180} value={tweet} placeholder='What is happening?!' onChange={onChange} required />
       <AttachFileButton htmlFor='file'>{file ? 'Photo  added✅' : 'Add photo'}</AttachFileButton>
       <AttachFileInput onChange={onFileChange} type='file' id='file' accept='image/*' />
       <SubmitBtn type='submit'>{isLoading ? 'Posting...' : 'Post Tweet'}</SubmitBtn>
