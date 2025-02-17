@@ -1,18 +1,9 @@
 import { InterfaceTweet } from './timeline';
 import { auth, db, storage } from '../firebase';
-import { deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { deleteDoc, doc } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
 import { useState } from 'react';
-import {
-  BtnWrapper,
-  Column,
-  DeleteButton,
-  EditButton,
-  Payload,
-  Photo,
-  Username,
-  Wrapper,
-} from './tweet-form-components';
+import { BtnWrapper, Column, DeleteButton, EditButton, Payload, Photo, Username, Wrapper } from './form-components';
 import EditTweetForm from './edit-tweet-form';
 
 export default function Tweet({ userName, photo, tweet, userId, id, createAt }: InterfaceTweet) {
