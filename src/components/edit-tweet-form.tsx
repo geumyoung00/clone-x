@@ -87,14 +87,11 @@ export default function EditTweetForm({ userName, photo, tweet, id, setIsEdit }:
 
       if (photo && typeof newPhoto === 'object') {
         // 사진을 교체한 경우
-        // 1. storage에서 기존의 이미지를 삭제
-        await deleteObject(locationRef);
-
-        // 2. storage에 새로운 이미지를 등록 후 결과 URL 받아오기
+        // 1. storage에 새로운 이미지를 등록 후 결과 URL 받아오기
         const result = await uploadBytes(locationRef, newPhoto);
         const url = await getDownloadURL(result.ref);
 
-        // 3. 새로 등록된 이미지 주소로 tweet updated
+        // 2. 새로 등록된 이미지 주소로 tweet updated
         await updateDoc(docRef, { photo: url });
       }
     } catch (error) {
